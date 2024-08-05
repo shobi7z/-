@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة السعر بالدولار</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: center;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+            position: relative; /* تمكين الوضع النسبي لإدارة الموضع */
+        }
+        .animation {
+            position: absolute; /* تمكين الوضع المطابق لمحاذاة الأنميشن */
+            top: -250px; /* تعديل المسافة العلوية للأنميشن بحيث يكون فوق حقل الإدخال */
+            left: 50%; /* توسيط أفقي */
+            transform: translateX(-50%); /* توسيط أفقي دقيق */
+            width: 80%; /* تعيين عرض الأنميشن */
+            z-index: 1; /* تحديد الترتيب الطباعي للعناصر */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            width: 80%;
+            padding: 10px;
+            background-color: #800080;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4b0082;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <video class="animation" autoplay loop muted>
+            <source src="https://cdn-icons-mp4.flaticon.com/512/16766/16766934.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <label for="price">السعر بالدولار:</label>
+        <input type="number" id="price" step="0.001" placeholder="أدخل السعر بالدولار">
+        <button onclick="calculate()">احسب الآن</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            // تنسيق الرقم لإضافة ثلاثة أصفار
+            return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function roundUp(value) {
+            const step = 0.25;
+            let rounded = Math.ceil(value / step) * step;
+
+            if (value < rounded) {
+                rounded -= step;
+            }
+
+            if (rounded < value) {
+                rounded += step;
+            }
+
+            return rounded;
+        }
+
+        function calculate() {
+            const price = parseFloat(document.getElementById('price').value);
+            const conversionRate = 1380;
+
+            if (isNaN(price)) {
+                document.getElementById('result').innerText = "يرجى إدخال سعر صالح.";
+                return;
+            }
+
+            let result;
+
+            // التحقق من استثناء الرقم 1
+            if (price === 1) {
+                result = conversionRate;
+            } else {
+                result = price * conversionRate;
+                result = roundUp(result / 1000) * 1000; // قم بتقريب النتيجة بعد إزالة الأصفار الثلاثة
+            }
+
+            document.getElementById('result').innerText = "الناتج: " + formatNumber(result);
+        }
+    </script>
+</body>
+</html>
